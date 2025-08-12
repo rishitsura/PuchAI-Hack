@@ -135,7 +135,7 @@ class Fetch:
 
 # --- MCP Server Setup ---
 mcp = FastMCP(
-    "Job Finder MCP Server",
+    "Assignment Manager MCP Server",  # renamed from "Job Finder MCP Server"
     auth=SimpleBearerAuthProvider(TOKEN),
 )
 
