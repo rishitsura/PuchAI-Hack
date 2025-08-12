@@ -12,6 +12,7 @@ import os
 import random
 import string
 from typing import Literal, Optional
+from textwrap import dedent  # added
 
 import markdownify
 import httpx
@@ -26,7 +27,7 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 # Create the Supabase client
 supabase: Client = create_client("https://wqirjtgjnvqgkmwjkuof.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaXJqdGdqbnZxZ2ttd2prdW9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NDI4NTAsImV4cCI6MjA3MDQxODg1MH0.nsfI5G15rbrceJN5pczDWpLHU4H9EKFtKhdWEgFiPxE")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # --- Load environment variables ---
 load_dotenv()
@@ -264,6 +265,28 @@ async def assignment_manager(
 @mcp.tool
 async def validate() -> str:
     return MY_NUMBER
+
+@mcp.tool
+async def about() -> dict[str, str]:
+    server_name = "Assignment Manager MCP Server"
+    server_description = dedent("""
+    This MCP server powers a WhatsApp assistant that helps teachers and students manage school/college assignments.
+
+    Provided tools:
+    - assignment_manager: Create assignment dropboxes (teachers), accept student submissions (by submission ID + Drive link), and view submissions.
+    - validate: Returns the configured service number used by Puch.
+
+    Key integrations and behavior:
+    - Authentication via a simple Bearer token provider.
+    - Data persistence with Supabase (tables: assignments, submissions).
+    - Helpful, conversational flows for greeting, creating, submitting, and viewing.
+    - Runs over streamable-http on 0.0.0.0:8086.
+    """).strip()
+
+    return {
+        "name": server_name,
+        "description": server_description
+    }
 
 # --- Run MCP Server ---
 async def main():
